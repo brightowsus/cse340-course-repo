@@ -1,30 +1,178 @@
-html, body {
-    background-color: lightblue;
-    font-family: Arial, sans-serif;
+/* ================================
+   CSE 340 Service Network
+   Main Stylesheet
+   ================================ */
+
+/* Reset and base styles */
+* {
+    box-sizing: border-box;
     margin: 0;
-    padding: 20px;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
 }
 
 body {
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.6;
+    color: #1f2937;
+    background-color: #f4f7f9;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ================================
+   Navigation
+   ================================ */
+
+nav {
+    background-color: #123b5d;
+    padding: 0.9rem 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+nav li {
+    display: inline-block;
+}
+
+nav a {
+    display: block;
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 0.7rem 1rem;
+    border-radius: 6px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+nav a:hover,
+nav a:focus {
+    background-color: #ffffff;
+    color: #123b5d;
+}
+
+nav a:focus {
+    outline: 3px solid #f4b942;
+    outline-offset: 2px;
+}
+
+/* ================================
+   Main content
+   ================================ */
+
+main {
+    width: min(90%, 1000px);
+    margin: 3rem auto;
+    padding: 3rem;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    flex: 1;
+}
+
+h1 {
+    color: #123b5d;
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+}
+
+h2 {
+    color: #245b7a;
+    font-size: 1.7rem;
+    margin-bottom: 1rem;
+}
+
+p {
+    max-width: 700px;
+    margin: 0 auto 1.5rem;
+    font-size: 1.05rem;
+}
+
+/* ================================
+   Logo
+   ================================ */
+
+.main-logo {
+    display: block;
+    width: min(100%, 500px);
+    height: auto;
+    margin: 2rem auto 0;
+    border-radius: 10px;
+}
+
+/* ================================
+   Footer
+   ================================ */
+
+footer {
+    background-color: #123b5d;
+    color: #ffffff;
+    text-align: center;
+    padding: 1.5rem;
+    margin-top: auto;
+}
+
+footer p {
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+/* ================================
+   Responsive design
+   ================================ */
+
+@media (max-width: 700px) {
     nav {
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        li {
-            display: inline;
-            margin-right: 15px;
-        }
-
-        a {
-            text-decoration: none;
-            color: #333;
-            font-weight: bold;
-
-            &:hover {
-                color: #0066cc;
-            }
-        }
+        padding: 0.75rem 1rem;
     }
-}      
+
+    nav ul {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    nav li {
+        width: 100%;
+    }
+
+    nav a {
+        text-align: center;
+        width: 100%;
+    }
+
+    main {
+        width: 92%;
+        margin: 2rem auto;
+        padding: 2rem 1.25rem;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    h2 {
+        font-size: 1.4rem;
+    }
+
+    p {
+        font-size: 1rem;
+    }
+
+    .main-logo {
+        margin-top: 1.5rem;
+    }
+}
