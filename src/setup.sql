@@ -54,3 +54,145 @@ VALUES
 (3, 'Community Garden', 'Create a community garden for local residents.', 'Kumasi', '2026-10-30'),
 (3, 'Donation Campaign', 'Collect essential items for families in need.', 'Tema', '2026-11-06');
 
+
+
+
+-- ============================================
+-- CATEGORIES
+-- ============================================
+
+CREATE TABLE public.categories (
+    category_id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE
+);
+
+-- Insert categories
+INSERT INTO public.categories (name)
+VALUES
+    ('Environment'),
+    ('Education'),
+    ('Community Development'),
+    ('Health'),
+    ('Youth Development');
+
+
+-- ============================================
+-- PROJECT / CATEGORY RELATIONSHIP
+-- ============================================
+
+CREATE TABLE public.project_category (
+    project_id INT NOT NULL,
+    category_id INT NOT NULL,
+
+    PRIMARY KEY (project_id, category_id),
+
+    FOREIGN KEY (project_id)
+        REFERENCES public.projects(project_id)
+        ON DELETE CASCADE,
+
+    FOREIGN KEY (category_id)
+        REFERENCES public.categories(category_id)
+        ON DELETE CASCADE
+);
+
+
+-- ============================================
+-- VERIFY CATEGORIES
+-- ============================================
+
+SELECT *
+FROM public.categories;
+
+
+-- ============================================
+-- VERIFY PROJECTS
+-- ============================================
+
+SELECT project_id, title
+FROM public.projects
+ORDER BY project_id;
+
+
+-- ============================================
+-- VERIFY CATEGORY IDs
+-- ============================================
+
+SELECT category_id, name
+FROM public.categories
+ORDER BY category_id;
+
+
+-- ============================================
+-- ASSIGN CATEGORIES TO PROJECTS
+-- ============================================
+
+INSERT INTO public.project_category (project_id, category_id)
+VALUES
+    (1, 1),
+    (1, 3),
+    (2, 3),
+    (3, 2),
+    (3, 5),
+    (4, 1),
+    (5, 4);
+
+
+-- ============================================
+-- VERIFY PROJECT / CATEGORY RELATIONSHIPS
+-- ============================================
+
+SELECT
+    p.title AS project,
+    c.name AS category
+FROM public.projects p
+JOIN public.project_category pc
+    ON p.project_id = pc.project_id
+JOIN public.categories c
+    ON pc.category_id = c.category_id
+ORDER BY p.project_id;
+
+
+-- ============================================
+-- ADD CATEGORIES TO PROJECTS 6-15
+-- ============================================
+
+INSERT INTO public.project_category (project_id, category_id)
+VALUES
+    (6, 2), -- Education
+
+    (7, 1), -- Environment
+    (7, 5), -- Youth Development
+
+    (8, 3), -- Community Development
+
+    (9, 4), -- Health
+
+    (10, 1), -- Environment
+
+    (11, 2), -- Education
+    (11, 3), -- Community Development
+
+    (12, 5), -- Youth Development
+
+    (13, 4), -- Health
+    (13, 3), -- Community Development
+
+    (14, 1), -- Environment
+    (14, 2), -- Education
+
+    (15, 5); -- Youth Development
+
+    -- ============================================
+-- VERIFY PROJECT/CATEGORY RELATIONSHIPS
+-- ============================================
+
+SELECT
+    p.project_id,
+    p.title AS project,
+    c.name AS category
+FROM public.projects p
+JOIN public.project_category pc
+    ON p.project_id = pc.project_id
+JOIN public.categories c
+    ON pc.category_id = c.category_id
+ORDER BY p.project_id, c.name;
