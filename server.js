@@ -18,6 +18,17 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
+
+
+app.use((err, req, res, next) => {
+    res.status(500).render("errors/500", {
+        error: err.message,
+        stack: err.stack,
+        NODE_ENV: process.env.NODE_ENV
+    });
+});
+
+
 // Set EJS as the templating engine
 app.set('view engine', 'ejs');
 
@@ -32,6 +43,10 @@ app.use((req, res, next) => {
     res.locals.NODE_ENV = NODE_ENV;
     next();
 });
+
+
+
+
 
 // Middleware to log all incoming requests
 app.use((req, res, next) => {
@@ -77,6 +92,35 @@ app.get("/categories", async (req, res) => {
         title: "Service Project Categories",
         categories
     });
+});
+
+
+// Catch-all route for 404 errors
+app.use((req, res, next) => {
+    const err = new Error('Page Not Found');
+    err.status = 404;
+    next(err);
+});
+
+// Global error handler
+app.use((err, req, res, next) => {
+    // Log error details for debugging
+    console.error('Error occurred:', err.message);
+    console.error('Stack trace:', err.stack);
+    
+    // Determine status and template
+    const status = err.status || 500;
+    const template = status === 404 ? '404' : '500';
+    
+    // Prepare data for the template
+    const context = {
+        title: status === 404 ? 'Page Not Found' : 'Server Error',
+        error: err.message,
+        stack: err.stack
+    };
+    
+    // Render the appropriate error template
+    res.status(status).render(`errors/${template}`, context);
 });
 
 // Start server and test database connection
