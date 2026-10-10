@@ -28,10 +28,27 @@
         </a>
     </p>
 
+    <section aria-labelledby="categories-heading">
+        <h2 id="categories-heading">Categories</h2>
+
+        <% if (categories.length === 0) { %>
+            <p>No categories assigned to this project.</p>
+        <% } else { %>
+            <ul>
+                <% categories.forEach(category => { %>
+                    <li>
+                        <a href="/category/<%= category.category_id %>">
+                            <%= category.name %>
+                        </a>
+                    </li>
+                <% }) %>
+            </ul>
+        <% } %>
+    </section>
+
     <p>
         <a href="/projects">Back to Upcoming Projects</a>
     </p>
 </main>
 
 <%- include('partials/footer') %>
-

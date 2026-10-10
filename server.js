@@ -28,7 +28,6 @@ app.use((req, res, next) => {
 app.use(routes);
 
 
-
 app.use((err, req, res, next) => {
     console.error('Error occurred:', err.message);
     console.error(err.stack);

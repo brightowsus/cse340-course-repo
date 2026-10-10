@@ -1,0 +1,29 @@
+
+<%- include('partials/header') %>
+
+<main>
+    <h1><%= category.name %></h1>
+
+    <h2>Projects in This Category</h2>
+
+    <% if (projects.length === 0) { %>
+        <p>No projects are currently assigned to this category.</p>
+    <% } else { %>
+        <ul>
+            <% projects.forEach(project => { %>
+                <li>
+                    <a href="/project/<%= project.project_id %>">
+                        <%= project.title %>
+                    </a>
+                    <p><%= project.description %></p>
+                    <p>Location: <%= project.location %></p>
+                    <p>Date: <%= new Date(project.date).toLocaleDateString() %></p>
+                </li>
+            <% }) %>
+        </ul>
+    <% } %>
+
+    <p><a href="/categories">Back to All Categories</a></p>
+</main>
+
+<%- include('partials/footer') %>
