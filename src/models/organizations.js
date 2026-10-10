@@ -1,14 +1,39 @@
-import db from './db.js'
 
-const getAllOrganizations = async() => {
+import db from './db.js';
+
+const getAllOrganizations = async () => {
     const query = `
-        SELECT organization_id, name, description, contact_email, logo_filename
-      FROM public.organization;
+        SELECT
+            organization_id,
+            name,
+            description,
+            contact_email,
+            logo_filename
+        FROM public.organization;
     `;
 
     const result = await db.query(query);
-
     return result.rows;
-}
+};
 
-export {getAllOrganizations}  
+// Get one organization by its ID
+const getOrganizationDetails = async (id) => {
+    const query = `
+        SELECT
+            organization_id,
+            name,
+            description,
+            contact_email,
+            logo_filename
+        FROM public.organization
+        WHERE organization_id = $1;
+    `;
+
+    const result = await db.query(query, [id]);
+    return result.rows[0];
+};
+
+export {
+    getAllOrganizations,
+    getOrganizationDetails
+};

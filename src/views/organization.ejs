@@ -1,0 +1,25 @@
+
+<%- include('partials/header') %>
+
+<main>
+    <h1><%= organization.name %></h1>
+
+    <p>
+        <strong>Description:</strong>
+        <%= organization.description %>
+    </p>
+
+    <p>
+        <strong>Contact email:</strong>
+        <a href="mailto:<%= organization.contact_email %>">
+            <%= organization.contact_email %>
+        </a>
+    </p>
+
+    <p>
+        <a href="/organizations">Back to Organizations</a>
+    </p>
+</main>
+
+<%- include('partials/footer') %>
+

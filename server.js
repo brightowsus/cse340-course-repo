@@ -1,6 +1,7 @@
 import express from 'express';
 import { fileURLToPath } from 'url';
 import path from 'path';
+import routes from './src/routes.js';
 
 import { testConnection } from './src/models/db.js';
 import { getAllOrganizations } from './src/models/organizations.js';
@@ -16,15 +17,27 @@ const PORT = process.env.PORT || 3000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+
+// Make NODE_ENV available to all EJS templates
 const app = express();
+app.use((req, res, next) => {
+    res.locals.NODE_ENV = NODE_ENV;
+    next();
+});
+
+app.use(routes);
 
 
 
 app.use((err, req, res, next) => {
-    res.status(500).render("errors/500", {
+    console.error('Error occurred:', err.message);
+    console.error(err.stack);
+
+    res.status(err.status || 500).render('errors/500', {
+        title: 'Something Went Wrong',
         error: err.message,
         stack: err.stack,
-        NODE_ENV: process.env.NODE_ENV
+        NODE_ENV: NODE_ENV
     });
 });
 
@@ -93,6 +106,7 @@ app.get("/categories", async (req, res) => {
         categories
     });
 });
+
 
 
 // Catch-all route for 404 errors
