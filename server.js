@@ -18,13 +18,17 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 
-// Make NODE_ENV available to all EJS templates
+ // Make NODE_ENV available to all EJS templates
 const app = express();
+
+// Allow Express to receive and process common POST data
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
 app.use((req, res, next) => {
     res.locals.NODE_ENV = NODE_ENV;
     next();
 });
-
 app.use(routes);
 
 
@@ -55,9 +59,6 @@ app.use((req, res, next) => {
     res.locals.NODE_ENV = NODE_ENV;
     next();
 });
-
-
-
 
 
 // Middleware to log all incoming requests
