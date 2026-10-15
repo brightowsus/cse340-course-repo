@@ -21,6 +21,10 @@ const __dirname = path.dirname(__filename);
  // Make NODE_ENV available to all EJS templates
 const app = express();
 
+
+app.use(express.static(path.join(__dirname, 'public')));
+
+
 // Allow Express to receive and process common POST data
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
