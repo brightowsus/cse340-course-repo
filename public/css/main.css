@@ -82,7 +82,10 @@ main {
     box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
     text-align: center;
     flex: 1;
+    color: #243047;
+    font-family: Arial, Helvetica, sans-serif;
 }
+  
 
 h1 {
     color: #123b5d;
@@ -174,5 +177,165 @@ footer p {
 
     .main-logo {
         margin-top: 1.5rem;
+    }
+}
+
+/* Flash message styles */
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+.alert.success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+.alert.error {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+.alert.warning {
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+}
+.alert.info {
+    color: #0c5460;
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+}
+
+
+
+/* ===== Organizations Page ===== */
+
+
+
+main h1 {
+    margin-bottom: 12px;
+    font-size: 2.2rem;
+    color: #183153;
+}
+
+main p {
+    line-height: 1.7;
+    color: #596579;
+}
+
+/* Organization list */
+main ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    list-style: none;
+    padding: 0;
+    margin: 28px 0;
+}
+
+/* Individual organization card */
+main ul li {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    min-width: 0;
+    padding: 24px;
+    background-color: #ffffff;
+    border: 1px solid #e0e6ef;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(20, 40, 70, 0.06);
+    overflow-wrap: anywhere;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    line-height: 1.7;
+}
+
+main ul li:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 22px rgba(20, 40, 70, 0.12);
+}
+
+/* Organization logo */
+main ul li img {
+    display: block;
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    padding: 8px;
+    background-color: #f5f7fb;
+    border-radius: 10px;
+}
+
+/* Organization name and link */
+main ul li strong {
+    font-size: 1.15rem;
+    line-height: 1.5;
+}
+
+main ul li strong a {
+    color: #1d4ed8;
+    text-decoration: none;
+}
+
+main ul li strong a:hover {
+    color: #163fa8;
+    text-decoration: underline;
+}
+
+
+/* Add organization button */
+main > p:last-child {
+    margin-top: 32px;
+}
+
+main > p:last-child a {
+    display: inline-block;
+    padding: 13px 24px;
+    background-color: #1d4ed8;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 8px;
+    box-shadow: 0 3px 8px rgba(29, 78, 216, 0.2);
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+main > p:last-child a:hover {
+    background-color: #163fa8;
+    transform: translateY(-2px);
+}
+
+main > p:last-child a:focus-visible {
+    outline: 3px solid #93c5fd;
+    outline-offset: 4px;
+}
+
+/* Mobile screens */
+@media (max-width: 600px) {
+    main {
+        margin: 24px auto;
+        padding: 0 16px;
+    }
+
+    main h1 {
+        font-size: 1.8rem;
+    }
+
+    main ul {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    main ul li {
+        padding: 18px;
+    }
+
+    main > p:last-child a {
+        width: 100%;
+        box-sizing: border-box;
+        text-align: center;
     }
 }

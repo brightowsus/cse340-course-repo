@@ -1,12 +1,16 @@
+
 import express from 'express';
 import { fileURLToPath } from 'url';
 import path from 'path';
+import session from 'express-session';
+
 import routes from './src/routes.js';
+import flash from './src/middleware/flash.js';
 
 import { testConnection } from './src/models/db.js';
 import { getAllOrganizations } from './src/models/organizations.js';
-import { getAllProjects } from "./src/models/projects.js";
-import { getAllCategories } from "./src/models/categories.js";
+import { getAllProjects } from './src/models/projects.js';
+import { getAllCategories } from './src/models/categories.js';
 
 // Define the application environment
 const NODE_ENV = process.env.NODE_ENV?.toLowerCase() || 'production';
@@ -14,40 +18,12 @@ const NODE_ENV = process.env.NODE_ENV?.toLowerCase() || 'production';
 // Define the port number
 const PORT = process.env.PORT || 3000;
 
+// Define file paths
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-
- // Make NODE_ENV available to all EJS templates
+// Create the Express application
 const app = express();
-
-
-app.use(express.static(path.join(__dirname, 'public')));
-
-
-// Allow Express to receive and process common POST data
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-
-app.use((req, res, next) => {
-    res.locals.NODE_ENV = NODE_ENV;
-    next();
-});
-app.use(routes);
-
-
-app.use((err, req, res, next) => {
-    console.error('Error occurred:', err.message);
-    console.error(err.stack);
-
-    res.status(err.status || 500).render('errors/500', {
-        title: 'Something Went Wrong',
-        error: err.message,
-        stack: err.stack,
-        NODE_ENV: NODE_ENV
-    });
-});
-
 
 // Set EJS as the templating engine
 app.set('view engine', 'ejs');
@@ -55,17 +31,37 @@ app.set('view engine', 'ejs');
 // Tell Express where to find your templates
 app.set('views', path.join(__dirname, 'src/views'));
 
-// Serve static files from the public directory
+// Set up session management FIRST
+app.use(
+    session({
+        secret:
+            process.env.SESSION_SECRET ||
+            'development-secret-change-this-before-deployment',
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            maxAge: 60 * 60 * 1000
+        }
+    })
+);
+
+// Use flash middleware AFTER session management
+app.use(flash);
+
+// Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Middleware to make NODE_ENV available to all templates
+// Allow Express to process form and JSON data
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+// Make NODE_ENV available to all EJS templates
 app.use((req, res, next) => {
     res.locals.NODE_ENV = NODE_ENV;
     next();
 });
 
-
-// Middleware to log all incoming requests
+// Log incoming requests in development mode
 app.use((req, res, next) => {
     if (NODE_ENV === 'development') {
         console.log(`${req.method} ${req.url}`);
@@ -74,44 +70,61 @@ app.use((req, res, next) => {
     next();
 });
 
-// Routes
-app.get('/', async (req, res) => {
-    const title = 'Home';
+// Register application routes
+app.use(routes);
 
-    res.render('home', { title });
+// Home page
+app.get('/', async (req, res, next) => {
+    try {
+        res.render('home', {
+            title: 'Home'
+        });
+    } catch (error) {
+        next(error);
+    }
 });
 
-app.get('/organizations', async (req, res) => {
-    const organizations = await getAllOrganizations();
-    const title = 'Our Partner Organizations';
+// Organizations page
+app.get('/organizations', async (req, res, next) => {
+    try {
+        const organizations = await getAllOrganizations();
 
-    res.render('organizations', {
-        title,
-        organizations
-    });
+        res.render('organizations', {
+            title: 'Our Partner Organizations',
+            organizations
+        });
+    } catch (error) {
+        next(error);
+    }
 });
 
-app.get("/projects", async (req, res) => {
-    const projects = await getAllProjects();
+// Projects page
+app.get('/projects', async (req, res, next) => {
+    try {
+        const projects = await getAllProjects();
 
-    console.log(projects);
-
-    res.render("projects", {
-        title: "Service Projects",
-        projects
-    });
+        res.render('projects', {
+            title: 'Service Projects',
+            projects
+        });
+    } catch (error) {
+        next(error);
+    }
 });
 
-app.get("/categories", async (req, res) => {
-    const categories = await getAllCategories();
+// Categories page
+app.get('/categories', async (req, res, next) => {
+    try {
+        const categories = await getAllCategories();
 
-    res.render("categories", {
-        title: "Service Project Categories",
-        categories
-    });
+        res.render('categories', {
+            title: 'Service Project Categories',
+            categories
+        });
+    } catch (error) {
+        next(error);
+    }
 });
-
-
 
 // Catch-all route for 404 errors
 app.use((req, res, next) => {
@@ -122,23 +135,21 @@ app.use((req, res, next) => {
 
 // Global error handler
 app.use((err, req, res, next) => {
-    // Log error details for debugging
     console.error('Error occurred:', err.message);
-    console.error('Stack trace:', err.stack);
-    
-    // Determine status and template
+
+    if (NODE_ENV === 'development') {
+        console.error(err.stack);
+    }
+
     const status = err.status || 500;
     const template = status === 404 ? '404' : '500';
-    
-    // Prepare data for the template
-    const context = {
-        title: status === 404 ? 'Page Not Found' : 'Server Error',
+
+    res.status(status).render(`errors/${template}`, {
+        title: status === 404 ? 'Page Not Found' : 'Something Went Wrong',
         error: err.message,
-        stack: err.stack
-    };
-    
-    // Render the appropriate error template
-    res.status(status).render(`errors/${template}`, context);
+        stack: NODE_ENV === 'development' ? err.stack : undefined,
+        NODE_ENV
+    });
 });
 
 // Start server and test database connection
