@@ -30,7 +30,7 @@ CREATE TABLE projects (
         FOREIGN KEY (organization_id)
         REFERENCES organizations(organization_id)
 );
-
+ 
 
 
 INSERT INTO projects
