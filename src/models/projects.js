@@ -21,6 +21,27 @@ const getAllProjects = async () => {
     return result.rows;
 };
 
+// Get all service projects associated with a specific organization
+const getProjectsByOrganizationId = async (organizationId) => {
+    const query = `
+        SELECT
+            project_id,
+            organization_id,
+            title,
+            description,
+            location,
+            date
+        FROM public.projects
+        WHERE organization_id = $1
+        ORDER BY date;
+    `;
+
+    const queryParams = [organizationId];
+    const result = await db.query(query, queryParams);
+
+    return result.rows;
+};
+
 // Get the next upcoming service projects
 const getUpcomingProjects = async (number_of_projects) => {
     const query = `
@@ -68,5 +89,6 @@ const getProjectDetails = async (id) => {
 export {
     getAllProjects,
     getUpcomingProjects,
+    getProjectsByOrganizationId,
     getProjectDetails
 };

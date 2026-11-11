@@ -4,7 +4,7 @@ import {
     getOrganizationDetails,
     createOrganization
 } from '../models/organizations.js';
-
+import { getProjectsByOrganizationId } from '../models/projects.js';
 import { body, validationResult } from 'express-validator';
 
 // Validation and sanitization rules for the organization form
@@ -46,26 +46,37 @@ const showOrganizationsPage = async (req, res, next) => {
     }
 };
 
-// Display one organization's details
+// Display one organization's details and associated projects
 const showOrganizationDetailsPage = async (req, res, next) => {
     try {
-        const { id } = req.params;
-        const organization = await getOrganizationDetails(id);
+        const organizationId = req.params.id;
 
-        if (!organization) {
+        // Retrieve organization details
+        const organizationDetails = await getOrganizationDetails(organizationId);
+
+        // Check whether the organization exists
+        if (!organizationDetails) {
             return res.status(404).render('errors/404', {
                 title: 'Page Not Found'
             });
         }
 
+        // Retrieve projects belonging to this organization
+        const projects = await getProjectsByOrganizationId(organizationId);
+
+        const title = 'Organization Details';
+
         return res.render('organization', {
-            title: organization.name,
-            organization
+            title,
+            organizationDetails,
+            projects
         });
+
     } catch (error) {
         next(error);
     }
 };
+
 
 // Display the new organization form
 const showNewOrganizationForm = async (req, res, next) => {

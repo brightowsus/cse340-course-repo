@@ -30,7 +30,7 @@ const getOrganizationDetails = async (id) => {
     `;
 
     const result = await db.query(query, [id]);
-    return result.rows[0];
+    return result.rows.length > 0 ? result.rows[0] : null;
 };
 
 
