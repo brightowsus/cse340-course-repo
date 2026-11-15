@@ -8,9 +8,7 @@ import routes from './src/routes.js';
 import flash from './src/middleware/flash.js';
 
 import { testConnection } from './src/models/db.js';
-import { getAllOrganizations } from './src/models/organizations.js';
-import { getAllProjects } from './src/models/projects.js';
-import { getAllCategories } from './src/models/categories.js';
+
 
 // Define the application environment
 const NODE_ENV = process.env.NODE_ENV?.toLowerCase() || 'production';
@@ -84,47 +82,8 @@ app.get('/', async (req, res, next) => {
     }
 });
 
-// Organizations page
-app.get('/organizations', async (req, res, next) => {
-    try {
-        const organizations = await getAllOrganizations();
 
-        res.render('organizations', {
-            title: 'Our Partner Organizations',
-            organizations
-        });
-    } catch (error) {
-        next(error);
-    }
-});
 
-// Projects page
-app.get('/projects', async (req, res, next) => {
-    try {
-        const projects = await getAllProjects();
-
-        res.render('projects', {
-            title: 'Service Projects',
-            projects
-        });
-    } catch (error) {
-        next(error);
-    }
-});
-
-// Categories page
-app.get('/categories', async (req, res, next) => {
-    try {
-        const categories = await getAllCategories();
-
-        res.render('categories', {
-            title: 'Service Project Categories',
-            categories
-        });
-    } catch (error) {
-        next(error);
-    }
-});
 
 // Catch-all route for 404 errors
 app.use((req, res, next) => {
